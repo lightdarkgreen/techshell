@@ -19,7 +19,11 @@
  */
 int main() {
   while (true) {
+    // Line read from standard input.
     char *line;
+
+    // Tokens resulting from parsing that line.
+    ParsedLine *parsed;
 
     // Print the prompt.
     print_prompt();
@@ -39,7 +43,17 @@ int main() {
       }
     }
 
-    printf("%s\n", line); // DEBUG
+    // Parse the line into tokens.
+    parsed = parse_line(line);
     free(line);
+
+    // DEBUG
+    for (size_t i = 0; i < parsed->count; i++) {
+      printf("[%s] ", parsed->tokens[i]);
+    }
+    printf("\n");
+    // DEBUG
+
+    free_parsed_line(parsed);
   }
 }
