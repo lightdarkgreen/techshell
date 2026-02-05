@@ -10,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "cd.h"
 #include "error.h"
 #include "parser.h"
 #include "prompt.h"
@@ -47,12 +48,22 @@ int main() {
     parsed = parse_line(line);
     free(line);
 
-    // DEBUG
-    for (size_t i = 0; i < parsed->count; i++) {
-      printf("[%s] ", parsed->tokens[i]);
+    if (parsed->count > 0) {
+      // Handle exit.
+      if (strcmp(parsed->tokens[0], "exit") == 0) {
+        exit(0);
+      }
+
+      // Handle cd.
+      else if (strcmp(parsed->tokens[0], "cd") == 0) {
+        cd(parsed);
+      }
+
+      // Look for non-built-in commands externally.
+      else {
+        printf("not implemetned\n");
+      }
     }
-    printf("\n");
-    // DEBUG
 
     free_parsed_line(parsed);
   }
