@@ -12,14 +12,38 @@
 
 void print_error();
 void print_prompt();
+char *read_line();
+void *xmalloc(size_t);
+void *xrealloc(void *, size_t);
 
 /**
  * Run the main command loop.
  */
 int main() {
-  print_prompt();
+  while (true) {
+    char *line;
 
-  return 0;
+    // Print the prompt.
+    print_prompt();
+
+    // Read a line.
+    line = read_line();
+
+    // Stop if nothing was read.  If there was an error, print it and exit
+    // with a failure status.  If there wasn't an error, just exit.
+    if (line == NULL) {
+      if (ferror(stdin)) {
+        print_error();
+        return 1;
+      } else {
+        printf("\n");
+        return 0;
+      }
+    }
+
+    printf("%s\n", line); // DEBUG
+    free(line);
+  }
 }
 
 /**
@@ -44,10 +68,10 @@ void print_error() {
  */
 void print_prompt() {
   // Pointer to the value of $HOME.
-  char *home;
+  char *home = NULL;
 
   // Buffer for the result of getcwd().
-  char *cwd;
+  char *cwd = NULL;
 
   // Length of $HOME.
   size_t home_length;
@@ -59,17 +83,12 @@ void print_prompt() {
   bool in_home = false;
 
   // Get the current directory in a dynamically allocated buffer.  If the
-  // buffer is too short, its length is doubled; thus this operation takes
-  // O(lg n) time with respect to the length of the current directory.
+  // buffer is too short, double its length and try again.
   for (cwd_length = 1;; cwd_length *= 2) {
-    cwd = malloc(cwd_length);
-    if (cwd == NULL) {
-      print_error();
-    }
+    cwd = xrealloc(cwd, cwd_length);
     if (getcwd(cwd, cwd_length) != NULL) {
       break;
     }
-    free(cwd);
   }
 
   // Try to get $HOME, and if it is set, see if the current directory is
@@ -104,4 +123,74 @@ void print_prompt() {
   }
 
   free(cwd);
+}
+
+/**
+ * Read and parse a line from standard input, returning it as a dynamically
+ * allocated string.  If an error occurs or an EOF occurs before any
+ * characters are read, return NULL.
+ */
+char *read_line() {
+  // Buffer for the line.
+  char *line = NULL;
+
+  // Length of the line.
+  size_t length = 0;
+
+  while (true) {
+    char c;
+
+    // Get the next character.
+    c = fgetc(stdin);
+
+    // Return NULL if an error or EOF occurred.
+    if (c == EOF) {
+      free(line);
+      return NULL;
+    }
+
+    // Stop once a newline is read.
+    if (c == '\n') {
+      break;
+    }
+
+    // Add the character to the buffer.
+    line = xrealloc(line, length + 1);
+    line[length++] = c;
+  }
+
+  // Add a terminating null byte.
+  line = xrealloc(line, length + 1);
+  line[length] = 0;
+
+  return line;
+}
+
+/**
+ * Allocate size bytes of memory with malloc().  If the allocation fails,
+ * print an error message and exit with a failure status.
+ */
+void *xmalloc(size_t size) {
+  void *memory;
+
+  memory = malloc(size);
+  if (memory == NULL && size > 0) {
+    print_error();
+  }
+
+  return memory;
+}
+
+/**
+ * Reallocate a block of memory to size bytes with realloc().  If the
+ * reallocation fails, print an error message and exith with a failure
+ * status.
+ */
+void *xrealloc(void *memory, size_t size) {
+  memory = realloc(memory, size);
+  if (memory == NULL && size > 0) {
+    print_error();
+  }
+
+  return memory;
 }
