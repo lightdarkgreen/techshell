@@ -7,24 +7,53 @@ basic input/output redirection.
 
 ## Compiling
 
-To compile the shell, first clone the repository using git:
+To compile the shell, clone the git repository and run `make` in the root
+directory of the repository:
 
 ```sh
 git clone https://github.com/lightdarkgreen/techshell.git
+cd techshell
+make
 ```
 
-Then compile the file `techshell.c` with GCC (or another C99 compliant
-compiler):
+Alternatively, if you don't want to use `make`, you can use the following
+sequence of commands in the root directory of the repository to manually
+compile the shell:
 
 ```sh
-gcc --std=c99 -Wall -o techshell techshell.c
+mkdir obj
+gcc --std=c99 -Wall -O3 -c -o obj/error.o src/error.c
+gcc --std=c99 -Wall -O3 -c -o obj/memory.o src/memory.c
+gcc --std=c99 -Wall -O3 -c -o obj/parser.o src/parser.c
+gcc --std=c99 -Wall -O3 -c -o obj/prompt.o src/prompt.c
+gcc --std=c99 -Wall -O3 -c -o obj/techshell.o src/techshell.c
+gcc --std=c99 -Wall -O3 -o techshell obj/*.o
 ```
 
-The resulting `techshell` binary can then be run:
+After compiling the shell, it will be found in the root directory of the
+repository.  It can be run using the command:
 
 ```sh
 ./techshell
 ```
+
+## Layout
+
+All of the source files are in the `src` subdirectory.  The main file is
+`techshell.c`, which uses functions defined in the other files to do most
+of its work.  All of the source files other than `techshell.c` come in `.c`
+and `.h` pairs; e.g. `parser.c` and `parser.h`; the `.h` files are headers
+containing prototypes for the functions defined in the `.c` files.
+
+Error reporting is defined in `error.c`.
+
+Wrappers for memory allocation are defined in `memory.c`.  These call
+standard functions like `malloc` and `realloc`, but check for out of memory
+errors; while these are rare, they still need to be handled.
+
+Parsing and line input are defined in `parser.c`.
+
+Prompt display logic is defiend in `prompt.c`.
 
 ## Authors
 
