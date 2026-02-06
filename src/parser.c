@@ -30,7 +30,7 @@ void add_token(ParsedLine *parsed, const char *token, size_t length) {
   copy[length] = 0;
 
   // Append a pointer to the new copy.
-  parsed->tokens = realloc(
+  parsed->tokens = xrealloc(
     parsed->tokens,
     (parsed->count + 1) * sizeof(char *)
   );
