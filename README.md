@@ -22,10 +22,12 @@ compile the shell:
 
 ```sh
 mkdir obj
+gcc --std=c99 -Wall -O3 -c -o obj/cd.o src/cd.c
 gcc --std=c99 -Wall -O3 -c -o obj/error.o src/error.c
 gcc --std=c99 -Wall -O3 -c -o obj/memory.o src/memory.c
 gcc --std=c99 -Wall -O3 -c -o obj/parser.o src/parser.c
 gcc --std=c99 -Wall -O3 -c -o obj/prompt.o src/prompt.c
+gcc --std=c99 -Wall -O3 -c -o obj/runner.o src/runner.c
 gcc --std=c99 -Wall -O3 -c -o obj/techshell.o src/techshell.c
 gcc --std=c99 -Wall -O3 -o techshell obj/*.o
 ```
@@ -45,6 +47,8 @@ of its work.  All of the source files other than `techshell.c` come in `.c`
 and `.h` pairs; e.g. `parser.c` and `parser.h`; the `.h` files are headers
 containing prototypes for the functions defined in the `.c` files.
 
+The `cd` command is defined in `cd.c`.
+
 Error reporting is defined in `error.c`.
 
 Wrappers for memory allocation are defined in `memory.c`.  These call
@@ -54,6 +58,8 @@ errors; while these are rare, they still need to be handled.
 Parsing and line input are defined in `parser.c`.
 
 Prompt display logic is defiend in `prompt.c`.
+
+Spawning of child processes to run the commands is handled in `runner.c`.
 
 ## Authors
 

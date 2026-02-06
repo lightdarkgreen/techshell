@@ -14,6 +14,7 @@
 #include "error.h"
 #include "parser.h"
 #include "prompt.h"
+#include "runner.h"
 
 /**
  * Run the main command loop.
@@ -61,7 +62,7 @@ int main() {
 
       // Look for non-built-in commands externally.
       else {
-        printf("not implemetned\n");
+        run(parsed);
       }
     }
 
