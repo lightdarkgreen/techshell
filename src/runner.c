@@ -85,7 +85,7 @@ void run(ParsedLine *parsed) {
       }
     }
     if (stdout_name) {
-      fd = open(stdout_name, O_WRONLY | O_CREAT, 0666);
+      fd = open(stdout_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
       if (fd == -1 || dup2(fd, 1) == -1) {
         print_error();
         exit(127);
