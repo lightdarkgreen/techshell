@@ -79,19 +79,26 @@ void run(ParsedLine *parsed) {
     // parent process.
     if (stdin_name) {
       fd = open(stdin_name, O_RDONLY);
-      if (fd == -1 || dup2(fd, 0) == -1) {
+      if (fd == -1 || dup2(fd, STDIN_FILENO) == -1) {
         print_error();
         exit(EXIT_FAILURE);
       }
+
+      // Close the extra file descriptor after duplicating it.
+      close(fd);
     }
     if (stdout_name) {
       fd = open(stdout_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-      if (fd == -1 || dup2(fd, 1) == -1) {
+      if (fd == -1 || dup2(fd, STDOUT_FILENO) == -1) {
         print_error();
         exit(EXIT_FAILURE);
       }
+
+      // Close the extra file descriptor after duplicating it.
+      close(fd);
     }
 
+    // Execute the command and check for errors.
     if (execvp(argv->tokens[0], (char * const *)argv->tokens) == -1) {
       print_error();
       exit(EXIT_FAILURE);
