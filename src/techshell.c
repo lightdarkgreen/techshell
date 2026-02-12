@@ -52,7 +52,7 @@ int main() {
     if (parsed->count > 0) {
       // Handle exit.
       if (strcmp(parsed->tokens[0], "exit") == 0) {
-        exit(0);
+        exit(EXIT_SUCCESS);
       }
 
       // Handle cd.

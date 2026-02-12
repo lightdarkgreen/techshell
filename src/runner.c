@@ -81,20 +81,20 @@ void run(ParsedLine *parsed) {
       fd = open(stdin_name, O_RDONLY);
       if (fd == -1 || dup2(fd, 0) == -1) {
         print_error();
-        exit(127);
+        exit(EXIT_FAILURE);
       }
     }
     if (stdout_name) {
       fd = open(stdout_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
       if (fd == -1 || dup2(fd, 1) == -1) {
         print_error();
-        exit(127);
+        exit(EXIT_FAILURE);
       }
     }
 
     if (execvp(argv->tokens[0], (char * const *)argv->tokens) == -1) {
       print_error();
-      exit(127);
+      exit(EXIT_FAILURE);
     }
   } else {
     free_parsed_line(argv);

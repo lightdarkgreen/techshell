@@ -21,6 +21,6 @@ void print_error() {
 
   // Out of memory errors are fatal.
   if (error == ENOMEM) {
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 }
