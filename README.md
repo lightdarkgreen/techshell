@@ -1,9 +1,9 @@
 # techshell
 
-`techshell` is a very simple shell for UNIX-like systems, written in C99.
-It allows the user to execute commands found in the `PATH` environment
-variable, change the directory using the `cd` built-in command, and do
-basic input/output redirection.
+`techshell` is a very simple shell for UNIX-like systems, written in C99
+with POSIX system calls.  It allows the user to execute commands found in
+the `PATH` environment variable, change the directory using the `cd`
+built-in command, and do basic input/output redirection.
 
 ## Compiling
 
